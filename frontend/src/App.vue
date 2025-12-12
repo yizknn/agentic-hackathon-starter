@@ -138,7 +138,7 @@ const shuffleGroups = () => {
 const copyResults = () => {
   const text = shuffledGroups.value.map(group => 
     `**${group.name}**\n` +
-    `メンバー: ${group.members.join(', ')}\n` +
+    `メンバー:\n${group.members.map(member => `  • ${member}`).join('\n')}\n` +
     `ランチ先: ${group.restaurant}\n` +
     `トークテーマ: ${group.talkTopic}\n`
   ).join('\n')
@@ -201,7 +201,11 @@ const reset = () => {
           <h3 :class="$style.groupName">{{ group.name }}</h3>
           <div :class="$style.members">
             <strong>メンバー:</strong>
-            <span :class="$style.memberList">{{ group.members.join(', ') }}</span>
+            <ul :class="$style.memberList">
+              <li v-for="member in group.members" :key="member" :class="$style.memberItem">
+                {{ member }}
+              </li>
+            </ul>
           </div>
           <div :class="$style.restaurant">
             <strong>🍽️ ランチ先:</strong> {{ group.restaurant }}
@@ -341,6 +345,7 @@ const reset = () => {
 
 .groupsContainer {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -373,8 +378,15 @@ const reset = () => {
 }
 
 .memberList {
+  margin: 8px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memberItem {
   color: #495057;
   font-weight: normal;
+  padding: 4px 0;
 }
 
 .restaurant {
@@ -432,9 +444,31 @@ const reset = () => {
 }
 
 /* レスポンシブ対応 */
+/* タブレット対応 */
 @media (min-width: 768px) {
   .groupsContainer {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+/* デスクトップ対応（3列表示） */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+    padding: 40px;
+  }
+
+  .groupsContainer {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+}
+
+/* 大型デスクトップ対応 */
+@media (min-width: 1600px) {
+  .container {
+    max-width: 1400px;
   }
 }
 </style>
